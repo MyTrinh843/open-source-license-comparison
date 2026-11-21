@@ -1,0 +1,4 @@
+project,license,spdx_id,owner,first_release,language
+React,MIT,MIT,Meta,2013,JavaScript
+TensorFlow,Apache License 2.0,Apache-2.0,Google,2015,C++/Python
+GIMP,GNU GPL v3 or later,GPL-3.0-or-later,GIMP Team,1996,C

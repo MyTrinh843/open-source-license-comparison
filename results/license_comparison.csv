@@ -1,0 +1,11 @@
+criterion,MIT,Apache-2.0,GPL-3.0
+license_group,Permissive,Permissive + patent grant,Strong copyleft
+commercial_use,Yes,Yes,Yes (must follow source-disclosure obligations)
+modification,Yes,Yes (state changes),Yes (derivatives stay GPL)
+redistribution,Yes (keep notice),Yes (keep license/NOTICE),Yes (provide source)
+must_open_derivative_source,No,No,Yes
+patent_grant,Not explicit,Explicit,Explicit
+trademark_grant,Not mentioned,No,May be declined
+warranty,No,No,No
+closed_source_integration,Very easy,Easy,Practically not possible
+examples,"React, Express.js","TensorFlow, Apache Spark","GIMP, GNU Bash"

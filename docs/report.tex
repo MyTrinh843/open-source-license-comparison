@@ -1,0 +1,421 @@
+% !TEX program = xelatex
+% Báo cáo Yêu cầu 4 - Bản quyền nội dung số
+% Biên dịch: XeLaTeX (Overleaf: Menu > Compiler > XeLaTeX). Cũng chạy được với pdfLaTeX.
+\documentclass[12pt,a4paper]{article}
+
+%---------- Hỗ trợ tiếng Việt ----------
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T5]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{lmodern}
+\else
+  \usepackage{fontspec}
+  \defaultfontfeatures{Ligatures=TeX}
+\fi
+\renewcommand{\contentsname}{Mục lục}
+\renewcommand{\figurename}{Hình}
+\renewcommand{\tablename}{Bảng}
+\renewcommand{\refname}{Tài liệu tham khảo}
+\renewcommand{\abstractname}{Tóm tắt}
+
+%---------- Các gói khác ----------
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{setspace}\onehalfspacing
+\usepackage{xcolor}
+\usepackage{booktabs,tabularx,array}
+\usepackage{enumitem}
+\usepackage{fancyvrb}
+\usepackage{caption}
+\usepackage{url}
+\usepackage[colorlinks=true,linkcolor=blue!60!black,urlcolor=blue!60!black,citecolor=green!40!black]{hyperref}
+\captionsetup{font=small,labelfont=bf}
+\setlength{\parindent}{1.2em}
+\setlength{\emergencystretch}{3em}
+\setlist{itemsep=2pt,topsep=4pt}
+
+% Khối mã
+\fvset{fontsize=\footnotesize,frame=leftline,framesep=3mm,rulecolor=\color{blue!50!black}}
+\newcounter{code}
+\newcommand{\codecap}[2]{\refstepcounter{code}\label{#2}\par\vspace{4pt}\noindent\textbf{Mã~\thecode.} #1\par\nopagebreak\vspace{2pt}}
+\newcommand{\fn}[1]{\texttt{#1}}
+
+\title{\textbf{BÁO CÁO THỰC HÀNH\\[4pt] Yêu cầu 4: Bản quyền nội dung số}\\[6pt]
+\large Repository GitHub và phân tích giấy phép mã nguồn mở MIT, Apache~2.0, GPL~v3}
+\author{Nguyễn Thị Mỹ Trinh -- MSHV: M2526035\\
+Lớp: CT999 -- Giảng viên hướng dẫn: Nguyễn Thanh Hải\\[4pt]
+Trường Đại học Cần Thơ -- Học phần: Sáng tạo và quản lý nội dung số}
+\date{21/11/2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Báo cáo trình bày quá trình tạo một repository GitHub hoàn chỉnh (README, LICENSE, CONTRIBUTING, CITATION) và phân tích ba dự án CNTT mã nguồn mở sử dụng ba giấy phép khác nhau: React (MIT), TensorFlow (Apache~2.0) và GIMP (GPL~v3). Từ đó, báo cáo so sánh các giấy phép về quyền sử dụng, tác động đến cộng đồng phát triển và khả năng thương mại hóa, đồng thời đưa ra nhận xét về giấy phép phù hợp với từng loại dự án.
+
+\medskip\noindent\textbf{Từ khóa:} mã nguồn mở, giấy phép phần mềm, MIT, Apache~2.0, GPL, bản quyền số.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%=====================================================
+\section{Tạo repository GitHub cho một project}\label{sec:repo}
+%=====================================================
+Repository được xây dựng để lưu trữ tài liệu, dữ liệu và kết quả của đề tài phân tích, so sánh giấy phép mã nguồn mở (Mục~\ref{sec:projects} và Mục~\ref{sec:compare}).
+
+\subsection{Tên repository và mô tả}\label{sec:repo-name}
+\begin{table}[htbp]
+\centering
+\caption{Thông tin repository}\label{tab:repo}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\textbf{Thuộc tính} & \textbf{Nội dung}\\\midrule
+Tên repo & \fn{open-source-license-comparison}\\
+Lý do đặt tên & Viết thường, ngăn cách bằng dấu gạch ngang, phản ánh trực tiếp nội dung nghiên cứu (so sánh giấy phép mã nguồn mở).\\
+Mô tả ngắn (About) & Phân tích và so sánh ba giấy phép MIT, Apache-2.0, GPL-3.0 qua ba dự án thực tế: React, TensorFlow, GIMP.\\
+Topics gợi ý & open-source, license, mit, apache-2, gpl-3, digital-rights\\
+Chế độ hiển thị & Public\\
+Giấy phép của repo & MIT\\\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Cấu trúc thư mục}\label{sec:tree}
+Cấu trúc thư mục tách riêng dữ liệu, mã nguồn, tài liệu và kết quả để dễ bảo trì, tái sử dụng (Mã~\ref{code:tree}).
+
+\codecap{Cây thư mục của repository}{code:tree}
+\begin{Verbatim}
+open-source-license-comparison/
+|-- README.md                  # Gioi thieu de tai, muc tieu, phuong phap, ket qua
+|-- LICENSE                    # Toan van giay phep MIT
+|-- CONTRIBUTING.md            # Huong dan dong gop
+|-- CITATION.cff               # Thong tin trich dan repo
+|-- .gitignore
+|-- data/
+|   `-- projects_metadata.csv  # Thong tin 3 du an (giay phep, nam ra mat, ...)
+|-- src/
+|   `-- fetch_repo_metadata.py # Script thu thap metadata tu GitHub API
+|-- docs/
+|   |-- report.pdf             # Bao cao hoan chinh (xuat tu Overleaf)
+|   `-- latex/                 # Ma nguon LaTeX cua bao cao
+`-- results/
+    `-- license_comparison.csv # Bang so sanh giay phep
+\end{Verbatim}
+
+\subsection{Nội dung file README.md}\label{sec:readme}
+\codecap{Nội dung file \fn{README.md}}{code:readme}
+\begin{Verbatim}
+# Open Source License Comparison
+
+> Phân tích và so sánh các giấy phép mã nguồn mở MIT, Apache-2.0 và GPL-3.0
+> thông qua ba dự án: React, TensorFlow và GIMP.
+
+## 1. Giới thiệu
+Giấy phép là yếu tố quyết định quyền sử dụng, chỉnh sửa và phân phối phần mềm.
+Repository này tổng hợp kết quả phân tích ba dự án mã nguồn mở nổi tiếng,
+mỗi dự án dùng một giấy phép khác nhau, từ đó rút ra nhận xét về việc
+lựa chọn giấy phép cho từng loại dự án.
+
+## 2. Mục tiêu
+- Phân tích mục tiêu, cộng đồng và giấy phép của 3 dự án mã nguồn mở.
+- So sánh MIT, Apache-2.0 và GPL-3.0 về quyền sử dụng, tác động đến
+  cộng đồng và khả năng thương mại hóa.
+- Đề xuất giấy phép phù hợp với từng loại dự án.
+
+## 3. Phương pháp
+1. Chọn dự án đại diện cho từng giấy phép (React, TensorFlow, GIMP).
+2. Đọc toàn văn giấy phép và tài liệu chính thức của từng dự án.
+3. Thu thập số liệu cộng đồng (số sao, số contributor) từ GitHub.
+4. Lập bảng so sánh theo các tiêu chí và rút ra nhận xét.
+
+## 4. Kết quả chính
+| Dự án      | Giấy phép  | Loại        |
+|------------|------------|-------------|
+| React      | MIT        | Permissive  |
+| TensorFlow | Apache-2.0 | Permissive  |
+| GIMP       | GPL-3.0+   | Copyleft    |
+
+Chi tiết xem tại `docs/report.pdf`.
+
+## 5. Cấu trúc thư mục
+- `data/`    : dữ liệu đầu vào
+- `src/`     : mã nguồn xử lý
+- `docs/`    : báo cáo, tài liệu
+- `results/` : kết quả phân tích
+
+## 6. Giấy phép
+Repository được phát hành theo giấy phép **MIT**. Xem file [LICENSE](LICENSE).
+
+## 7. Trích dẫn
+Xem file [CITATION.cff](CITATION.cff).
+
+## 8. Đóng góp
+Xem hướng dẫn tại [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## 9. Liên hệ
+Tác giả: Nguyễn Thị Mỹ Trinh - nguyenmytrinh843@gmail.com - Đại học Cần Thơ
+\end{Verbatim}
+
+\subsection{File LICENSE (giấy phép MIT)}\label{sec:license}
+Repository chọn giấy phép \textbf{MIT} vì đơn giản, cho phép sử dụng tự do và miễn trách nhiệm cho tác giả, phù hợp với repo học tập, tài liệu và mã nguồn nhỏ~\cite{mit}. Nội dung file \fn{LICENSE} được trình bày ở Mã~\ref{code:license}.
+
+\codecap{Nội dung file \fn{LICENSE}}{code:license}
+\begin{Verbatim}
+MIT License
+
+Copyright (c) 2026 Nguyễn Thị Mỹ Trinh
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+\end{Verbatim}
+
+Giải thích ngắn: giấy phép MIT cho phép sử dụng, sao chép, sửa đổi, hợp nhất, xuất bản, phân phối, cấp phép lại và bán bản sao phần mềm; điều kiện duy nhất là giữ nguyên thông báo bản quyền và thông báo giấy phép; phần mềm được cung cấp ``nguyên trạng'', không kèm bảo hành. Giấy phép được ghi rõ trong \fn{README.md} (mục 6, Mã~\ref{code:readme}) và trong \fn{CITATION.cff} (trường \fn{license}, Mã~\ref{code:cff}).
+
+\subsection{File CONTRIBUTING.md}\label{sec:contrib}
+\codecap{Nội dung file \fn{CONTRIBUTING.md}}{code:contrib}
+\begin{Verbatim}
+# Hướng dẫn đóng góp
+
+Cảm ơn bạn đã quan tâm đến dự án!
+
+## Báo lỗi / đề xuất
+- Mở một Issue mới, mô tả rõ vấn đề hoặc đề xuất.
+- Nếu là lỗi, nêu các bước tái hiện và kết quả mong đợi.
+
+## Quy trình đóng góp
+1. Fork repository về tài khoản của bạn.
+2. Tạo nhánh mới: `git checkout -b feature/ten-tinh-nang`.
+3. Thực hiện thay đổi và commit với thông điệp rõ ràng:
+   `git commit -m "docs: bổ sung phân tích giấy phép LGPL"`.
+4. Push nhánh: `git push origin feature/ten-tinh-nang`.
+5. Mở Pull Request vào nhánh `main`, mô tả nội dung thay đổi.
+
+## Quy ước
+- Mã nguồn Python tuân theo PEP 8.
+- Tài liệu viết bằng tiếng Việt hoặc tiếng Anh, trình bày nhất quán.
+- Mọi đóng góp được phát hành theo giấy phép MIT của dự án.
+- Trích dẫn nguồn đầy đủ khi bổ sung số liệu hoặc nội dung.
+
+## Quy tắc ứng xử
+Giữ thái độ tôn trọng, mang tính xây dựng trong mọi trao đổi.
+\end{Verbatim}
+
+\subsection{File CITATION.cff}\label{sec:cff}
+File \fn{CITATION.cff} giúp GitHub hiển thị nút ``Cite this repository'' và cho phép người khác trích dẫn repo trong bài báo theo định dạng chuẩn~\cite{cff,ghdocs}.
+
+\codecap{Nội dung file \fn{CITATION.cff}}{code:cff}
+\begin{Verbatim}
+cff-version: 1.2.0
+message: "Nếu sử dụng repository này, vui lòng trích dẫn như sau."
+title: "Open Source License Comparison"
+type: software
+authors:
+  - family-names: "Nguyễn"
+    given-names: "Thị Mỹ Trinh"
+    affiliation: "Đại học Cần Thơ"
+version: 1.0.0
+date-released: 2026-11-21
+license: MIT
+repository-code: "https://github.com/MyTrinh843/open-source-license-comparison"
+abstract: >-
+  Phân tích và so sánh các giấy phép mã nguồn mở MIT, Apache-2.0 và GPL-3.0
+  thông qua ba dự án React, TensorFlow và GIMP.
+keywords:
+  - open source
+  - software license
+  - digital rights
+\end{Verbatim}
+
+\subsection{Các bước thực hiện}
+\paragraph{Cách 1: giao diện web GitHub.}
+\begin{enumerate}
+  \item Đăng nhập GitHub, chọn \textbf{New repository}, nhập tên \path{open-source-license-comparison}, chọn Public, tích \emph{Add a README file}, ở mục \emph{Add license} chọn MIT License, rồi bấm \textbf{Create repository}.
+  \item Dùng \textbf{Add file $\rightarrow$ Create new file} để tạo \fn{CONTRIBUTING.md}, \fn{CITATION.cff} và các thư mục (gõ tên thư mục kèm dấu \texttt{/} và một file, ví dụ \path{data/projects_metadata.csv}).
+  \item Chỉnh sửa \fn{README.md} theo Mã~\ref{code:readme} và bấm \textbf{Commit changes}.
+\end{enumerate}
+\paragraph{Cách 2: dòng lệnh Git.}
+\begin{Verbatim}
+git clone https://github.com/MyTrinh843/open-source-license-comparison.git
+cd open-source-license-comparison
+mkdir data src docs results
+# ... tạo/sao chép README.md, LICENSE, CONTRIBUTING.md, CITATION.cff ...
+git add .
+git commit -m "docs: khởi tạo repo, README, LICENSE, CONTRIBUTING, CITATION"
+git push origin main
+\end{Verbatim}
+Ví dụ nội dung \fn{data/projects\_metadata.csv}:
+\begin{Verbatim}
+project,license,spdx_id,owner,first_release,language
+React,MIT,MIT,Meta,2013,JavaScript
+TensorFlow,Apache License 2.0,Apache-2.0,Google,2015,C++/Python
+GIMP,GNU GPL v3 or later,GPL-3.0-or-later,GIMP Team,1996,C
+\end{Verbatim}
+
+\begin{figure}[htbp]
+\centering
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{3cm}\textit{[Dán ảnh chụp màn hình trang repository vào đây,\\ rồi thay khung này bằng lệnh \texttt{includegraphics}]}\vspace{3cm}}}
+\caption{Ảnh chụp trang chính của repository (README, danh sách file, giấy phép MIT). Link repo: \url{https://github.com/MyTrinh843/open-source-license-comparison}}\label{fig:repo}
+\end{figure}
+
+%=====================================================
+\section{Phân tích ba dự án CNTT mã nguồn mở}\label{sec:projects}
+%=====================================================
+Ba dự án được chọn, mỗi dự án đại diện cho một họ giấy phép khác nhau (Bảng~\ref{tab:three}).
+
+\begin{table}[htbp]
+\centering
+\caption{Ba dự án và giấy phép tương ứng}\label{tab:three}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}l l X l@{}}
+\toprule
+\textbf{Dự án} & \textbf{Giấy phép} & \textbf{Nhóm giấy phép} & \textbf{Lĩnh vực}\\\midrule
+React & MIT & Permissive (cho phép rộng rãi) & Thư viện giao diện web\\
+TensorFlow & Apache 2.0 & Permissive, có điều khoản bằng sáng chế & Học máy / AI\\
+GIMP & GPL v3 trở lên & Strong copyleft & Xử lý ảnh đồ họa\\\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{React (giấy phép MIT)}\label{sec:react}
+\subsubsection*{Mục tiêu và phạm vi ứng dụng}
+React là thư viện JavaScript dùng để xây dựng giao diện người dùng theo mô hình component (thành phần) và khai báo (declarative). Thư viện do Meta (trước đây là Facebook) phát triển, công bố mã nguồn mở năm 2013~\cite{react}. React được dùng rộng rãi trong ứng dụng web một trang (SPA), kết hợp với các framework như Next.js, và qua React Native còn dùng để xây dựng ứng dụng di động.
+\subsubsection*{Cộng đồng phát triển và mức độ phổ biến}
+\begin{itemize}
+  \item Mã nguồn lưu trên GitHub (\fn{facebook/react}), thuộc nhóm repository có nhiều lượt gắn sao nhất trong lĩnh vực front-end (hàng trăm nghìn sao; cần kiểm tra số liệu mới nhất khi nộp bài).
+  \item Được duy trì chủ yếu bởi đội ngũ của Meta cùng đông đảo contributor bên ngoài; hệ sinh thái thư viện, công cụ và tài liệu rất lớn.
+  \item Thường nằm trong nhóm công nghệ front-end phổ biến nhất trong các khảo sát lập trình viên.
+\end{itemize}
+\subsubsection*{Giấy phép sử dụng}
+\begin{itemize}
+  \item \textbf{Nội dung:} MIT cho phép sử dụng, sao chép, sửa đổi, hợp nhất, phân phối, cấp phép lại và bán phần mềm~\cite{mit}.
+  \item \textbf{Điều kiện:} giữ nguyên thông báo bản quyền và nội dung giấy phép trong mọi bản sao hoặc phần đáng kể của phần mềm.
+  \item \textbf{Hạn chế:} không có bảo hành, tác giả không chịu trách nhiệm về thiệt hại phát sinh.
+  \item \textbf{Lưu ý lịch sử:} năm 2017, Facebook đổi giấy phép của React từ BSD kèm điều khoản bằng sáng chế (gây tranh cãi trong cộng đồng) sang MIT, sau khi nhiều tổ chức lo ngại và một số dự án (như Apache Software Foundation) đã hạn chế dùng React. Sự kiện này cho thấy giấy phép ảnh hưởng trực tiếp đến mức độ chấp nhận của cộng đồng.
+\end{itemize}
+
+\subsection{TensorFlow (giấy phép Apache 2.0)}\label{sec:tf}
+\subsubsection*{Mục tiêu và phạm vi ứng dụng}
+TensorFlow là nền tảng học máy mã nguồn mở đầu cuối do nhóm Google Brain phát triển, ra mắt công khai năm 2015~\cite{tf}. Thư viện hỗ trợ xây dựng, huấn luyện và triển khai mô hình học máy, học sâu trên nhiều môi trường: máy chủ, thiết bị di động và nhúng (TensorFlow Lite), trình duyệt (TensorFlow.js). Ứng dụng gồm thị giác máy tính, xử lý ngôn ngữ tự nhiên, hệ khuyến nghị và nhiều lĩnh vực khác.
+\subsubsection*{Cộng đồng phát triển và mức độ phổ biến}
+\begin{itemize}
+  \item Repository \fn{tensorflow/tensorflow} có số sao và số contributor rất lớn (hàng trăm nghìn sao, hàng nghìn contributor; cần kiểm tra số liệu mới nhất).
+  \item Google giữ vai trò dẫn dắt, đồng thời có nhiều đóng góp từ doanh nghiệp và cộng đồng nghiên cứu; hệ sinh thái gồm Keras, TensorBoard, TFX, TensorFlow Hub.
+  \item Được ứng dụng rộng rãi trong học thuật và công nghiệp, dù trong nghiên cứu hiện nay chịu cạnh tranh mạnh từ PyTorch.
+\end{itemize}
+\subsubsection*{Giấy phép sử dụng}
+\begin{itemize}
+  \item \textbf{Nội dung:} Apache License 2.0 cho phép sử dụng, sửa đổi, phân phối (cả mã nguồn và bản nhị phân) cho mục đích thương mại hoặc phi thương mại~\cite{apache}.
+  \item \textbf{Điều kiện:} kèm bản sao giấy phép; giữ thông báo bản quyền, bằng sáng chế, nhãn hiệu và ghi nguồn; ghi rõ các file đã bị sửa đổi; giữ lại nội dung file NOTICE (nếu có).
+  \item \textbf{Điểm nổi bật:} có điều khoản cấp quyền sử dụng bằng sáng chế rõ ràng từ người đóng góp; quyền này bị chấm dứt nếu người dùng khởi kiện về bằng sáng chế liên quan đến phần mềm.
+  \item \textbf{Hạn chế:} không cấp quyền sử dụng nhãn hiệu (tên, logo); không bảo hành.
+\end{itemize}
+
+\subsection{GIMP (giấy phép GPL v3 trở lên)}\label{sec:gimp}
+\subsubsection*{Mục tiêu và phạm vi ứng dụng}
+GIMP (GNU Image Manipulation Program) là phần mềm chỉnh sửa ảnh và đồ họa raster miễn phí, được khởi xướng năm 1996 bởi Spencer Kimball và Peter Mattis, nay thuộc hệ sinh thái GNU/GNOME~\cite{gimp}. GIMP được xem là giải pháp mã nguồn mở thay thế Adobe Photoshop, phục vụ chỉnh sửa ảnh, vẽ kỹ thuật số, thiết kế đồ họa và xử lý hàng loạt bằng script. Phần mềm chạy trên Linux, Windows, macOS và hỗ trợ mở rộng qua plug-in.
+\subsubsection*{Cộng đồng phát triển và mức độ phổ biến}
+\begin{itemize}
+  \item Phát triển bởi cộng đồng tình nguyện viên, không thuộc một công ty thương mại duy nhất; mã nguồn được quản lý trên hạ tầng GitLab của GNOME.
+  \item Có lịch sử hàng chục năm, được cung cấp trong nhiều bản phân phối Linux và dùng nhiều trong giáo dục, nghệ thuật số.
+  \item Có hệ sinh thái plug-in, brush, tài liệu và diễn đàn hỗ trợ đa ngôn ngữ.
+\end{itemize}
+\subsubsection*{Giấy phép sử dụng}
+\begin{itemize}
+  \item \textbf{Nội dung:} ứng dụng GIMP phát hành theo GPL phiên bản 3 hoặc mới hơn (GPLv3+)~\cite{gpl}; các thư viện lõi như libgimp thường dùng LGPL để plug-in có thể liên kết.
+  \item \textbf{Điều kiện:} khi phân phối bản gốc hoặc bản sửa đổi phải cung cấp mã nguồn (hoặc cách lấy mã nguồn), giữ nguyên giấy phép GPL cho toàn bộ tác phẩm phái sinh, giữ thông báo bản quyền.
+  \item \textbf{Hạn chế:} không được thêm ràng buộc bổ sung vượt quá GPL; không thể đưa mã GPL vào sản phẩm mã đóng đem phân phối.
+\end{itemize}
+
+%=====================================================
+\section{Báo cáo so sánh các giấy phép}\label{sec:compare}
+%=====================================================
+\subsection{Bảng so sánh tổng hợp}
+\begin{table}[htbp]
+\centering
+\caption{So sánh MIT, Apache 2.0 và GPL v3}\label{tab:compare}
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\bfseries}p{2.6cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}}
+\toprule
+Tiêu chí & \textbf{MIT} & \textbf{Apache 2.0} & \textbf{GPL v3}\\\midrule
+Nhóm giấy phép & Permissive & Permissive, có điều khoản bằng sáng chế & Strong copyleft\\
+Sử dụng thương mại & Được & Được & Được, nhưng phải tuân thủ nghĩa vụ mở mã khi phân phối\\
+Chỉnh sửa & Được & Được, phải ghi rõ file đã sửa & Được, bản sửa đổi cũng phải theo GPL\\
+Phân phối lại & Được, kèm thông báo bản quyền và giấy phép & Được, kèm giấy phép, NOTICE, thông báo bản quyền & Được, kèm giấy phép và mã nguồn\\
+Bắt buộc mở mã sản phẩm phái sinh & Không & Không & Có, toàn bộ tác phẩm phái sinh\\
+Bằng sáng chế & Không nêu rõ & Cấp quyền rõ ràng, chấm dứt khi kiện tụng & Cấp quyền rõ ràng cho người dùng\\
+Nhãn hiệu & Không đề cập & Không cấp quyền & Cho phép từ chối cấp quyền\\
+Bảo hành & Không & Không & Không\\
+Độ dài, độ phức tạp & Rất ngắn, dễ hiểu & Trung bình & Dài, phức tạp nhất\\
+Tích hợp vào sản phẩm mã đóng & Rất dễ & Dễ & Gần như không thể nếu có liên kết mã GPL\\
+Khả năng tương thích & Tương thích hầu hết giấy phép khác & Tương thích GPLv3, không tương thích GPLv2 & Chỉ kết hợp được với mã có giấy phép tương thích GPL\\
+Ví dụ tiêu biểu & React, Express.js & TensorFlow, Apache Spark & GIMP, GNU Bash\\\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Quyền sử dụng, chỉnh sửa và phân phối}
+Cả ba giấy phép đều cho phép tự do sử dụng, nghiên cứu, sửa đổi và phân phối phần mềm, nên đều thuộc nhóm giấy phép mã nguồn mở được Open Source Initiative công nhận. Khác biệt nằm ở điều kiện đi kèm khi phân phối (Bảng~\ref{tab:compare}). MIT chỉ yêu cầu giữ thông báo bản quyền. Apache 2.0 thêm yêu cầu ghi chú các thay đổi, giữ NOTICE và bổ sung cơ chế cấp quyền bằng sáng chế. GPL v3 yêu cầu bản phân phối lại phải kèm mã nguồn và giữ nguyên giấy phép GPL (nguyên tắc \emph{copyleft}), bảo đảm người dùng cuối luôn có các quyền tự do như bản gốc.
+
+\subsection{Tác động đến cộng đồng phát triển}
+\begin{itemize}
+  \item \textbf{MIT:} rào cản gia nhập thấp nhất, thu hút đông đảo cá nhân và doanh nghiệp sử dụng, đóng góp nhanh và hình thành hệ sinh thái lớn (như React). Mặt trái: doanh nghiệp có thể dùng mã mà không buộc phải đóng góp ngược lại.
+  \item \textbf{Apache 2.0:} tạo sự tin tưởng cho doanh nghiệp lớn nhờ điều khoản bằng sáng chế rõ ràng, thuận lợi cho dự án có đóng góp từ nhiều công ty cạnh tranh nhau (như TensorFlow, Apache Spark).
+  \item \textbf{GPL v3:} bảo vệ tính mở lâu dài, các cải tiến phải quay lại cộng đồng, tạo cộng đồng gắn bó với triết lý phần mềm tự do (như GIMP). Mặt trái: một số doanh nghiệp tránh dùng vì lo ngại nghĩa vụ mở mã.
+\end{itemize}
+
+\subsection{Tính thương mại hóa và tích hợp vào sản phẩm đóng}
+Với MIT và Apache 2.0, doanh nghiệp có thể tích hợp mã vào sản phẩm mã đóng và bán thương mại mà không phải công bố mã nguồn của sản phẩm, chỉ cần giữ các thông báo theo quy định. Apache 2.0 an toàn hơn về pháp lý khi sản phẩm liên quan đến bằng sáng chế. Với GPL v3, bán thương mại vẫn được phép (bán dịch vụ, hỗ trợ, đóng gói), nhưng nếu phân phối sản phẩm có chứa hoặc liên kết với mã GPL thì toàn bộ sản phẩm phái sinh phải theo GPL và công khai mã nguồn; vì vậy GPL không phù hợp với sản phẩm muốn giữ kín mã. Cần lưu ý GPL v3 không bao phủ việc chỉ cung cấp dịch vụ qua mạng (SaaS); khe hở này được khép lại bởi giấy phép AGPL.
+
+\subsection{Nhận xét: giấy phép nào phù hợp với loại dự án nào?}
+\begin{table}[htbp]
+\centering
+\caption{Gợi ý lựa chọn giấy phép theo loại dự án}\label{tab:choose}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}l X X@{}}
+\toprule
+\textbf{Giấy phép} & \textbf{Phù hợp với} & \textbf{Lý do}\\\midrule
+MIT & Thư viện, framework, công cụ nhỏ, dự án học tập; dự án muốn được dùng càng rộng càng tốt & Đơn giản, ít ràng buộc, thuận lợi cho áp dụng nhanh và thương mại hóa\\
+Apache 2.0 & Dự án quy mô lớn, nhiều doanh nghiệp tham gia; sản phẩm liên quan thuật toán, AI, hạ tầng có nguy cơ tranh chấp bằng sáng chế & Bảo vệ bằng sáng chế rõ ràng, vẫn cho tích hợp vào sản phẩm đóng\\
+GPL v3 & Ứng dụng hoàn chỉnh cho người dùng cuối, dự án theo triết lý phần mềm tự do muốn bảo đảm mọi cải tiến vẫn mở & Copyleft ngăn việc ``đóng'' mã phái sinh, bảo vệ quyền của người dùng\\\bottomrule
+\end{tabularx}
+\end{table}
+
+Có thể tóm tắt: muốn \textbf{lan tỏa tối đa} thì chọn MIT; muốn \textbf{lan tỏa kèm bảo vệ pháp lý về bằng sáng chế} thì chọn Apache 2.0; muốn \textbf{bảo đảm mã luôn mở} thì chọn GPL v3. Với repository học tập trong báo cáo này, MIT là lựa chọn hợp lý nhất (Mục~\ref{sec:license}). Các giấy phép tham khảo thêm tại~\cite{choose,spdx}.
+
+%=====================================================
+\section{Kết luận}\label{sec:conclusion}
+%=====================================================
+Báo cáo đã hoàn thành các yêu cầu: (1) xây dựng repository GitHub gồm \fn{README.md}, \fn{LICENSE} (MIT), \fn{CONTRIBUTING.md}, \fn{CITATION.cff} và cấu trúc thư mục \fn{data/}, \fn{src/}, \fn{docs/}, \fn{results/} (Mục~\ref{sec:repo}); (2) phân tích ba dự án React, TensorFlow và GIMP (Mục~\ref{sec:projects}); (3) so sánh các giấy phép và đưa ra gợi ý lựa chọn (Mục~\ref{sec:compare}). Bài học chính là giấy phép không chỉ là thủ tục pháp lý mà còn định hình mô hình phát triển, cộng đồng và chiến lược thương mại của dự án.
+
+\medskip
+\noindent\textit{Lưu ý:} số liệu cộng đồng (số sao, số contributor) thay đổi liên tục, cần kiểm tra trực tiếp trên GitHub vào thời điểm nộp bài và ghi rõ ngày truy cập.
+
+%=====================================================
+\begin{thebibliography}{10}
+\bibitem{mit} Open Source Initiative, ``The MIT License''. \url{https://opensource.org/license/mit}
+\bibitem{apache} Apache Software Foundation, ``Apache License, Version 2.0''. \url{https://www.apache.org/licenses/LICENSE-2.0}
+\bibitem{gpl} Free Software Foundation, ``GNU General Public License, version 3''. \url{https://www.gnu.org/licenses/gpl-3.0.html}
+\bibitem{choose} GitHub, ``Choose a License''. \url{https://choosealicense.com}
+\bibitem{spdx} SPDX, ``SPDX License List''. \url{https://spdx.org/licenses/}
+\bibitem{react} Meta, ``React'' (repository). \url{https://github.com/facebook/react}
+\bibitem{tf} Google, ``TensorFlow'' (repository). \url{https://github.com/tensorflow/tensorflow}
+\bibitem{gimp} The GIMP Team, ``GNU Image Manipulation Program''. \url{https://www.gimp.org}
+\bibitem{cff} Citation File Format. \url{https://citation-file-format.github.io}
+\bibitem{ghdocs} GitHub Docs, ``About CITATION files'' và ``Setting guidelines for repository contributors''. \url{https://docs.github.com}
+\end{thebibliography}
+\end{document}

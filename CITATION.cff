@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "Nếu sử dụng repository này, vui lòng trích dẫn như sau."
+title: "Open Source License Comparison"
+type: software
+authors:
+  - family-names: "Nguyễn"
+    given-names: "Thị Mỹ Trinh"
+    affiliation: "Đại học Cần Thơ"
+version: 1.0.0
+date-released: 2026-11-21
+license: MIT
+repository-code: "https://github.com/MyTrinh843/open-source-license-comparison"
+abstract: >-
+  Phân tích và so sánh các giấy phép mã nguồn mở MIT, Apache-2.0 và GPL-3.0
+  thông qua ba dự án React, TensorFlow và GIMP.
+keywords:
+  - open source
+  - software license
+  - digital rights
